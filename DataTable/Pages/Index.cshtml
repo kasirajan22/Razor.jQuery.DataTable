@@ -1,0 +1,58 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+</div>
+<table id="example" class="table table-condensed table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>IP</th>
+            <th>PostalCode</th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts
+{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css" integrity="sha512-1k7mWiTNoyx2XtmI96o+hdjP8nn0f3Z2N4oF/9ZZRgijyV4omsKOXEnqL1gKQNPy2MTSP9rIEWGcH/CInulptA==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#example").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": false,
+                "ajax": {
+                    url: "?handler=",
+                    type: "POST",
+                    headers: { 'RequestVerificationToken': $('@Html.AntiForgeryToken()').val() }
+                },
+                "columnDefs": [{
+                    "targets": -1,
+                    "data": null,
+                    @*"render": function (data, type, row, meta) {
+                        return '<a href="/edit/' + row.uid + '">Edit</a> | <a href="/details/' + row.uid + '">Details</a> | <a href="/delete/' + row.uid + '">Delete</a> | <a href="#" class="btn btn-danger" onclick=DeleteCustomer("' + row.uid + '"); >Delete</a>';
+                    },*@
+                    "sortable": false
+                }],
+                "columns": [
+                    { "data": "firstName", "name": "First Name", "autoWidth": true },
+                    { "data": "lastName", "name": "Last Name", "autoWidth": true },
+                    { "data": "email", "name": "Email", "autoWidth": true },
+                    { "data": "gender", "name": "Gender", "autoWidth": true },
+                    { "data": "userIP", "name": "IP", "autoWidth": true },
+                    { "data": "postalCode", "name": "PostalCode", "autoWidth": true },
+                ],
+                "order": [[0, "desc"]]
+            });
+        });</script>
+}
