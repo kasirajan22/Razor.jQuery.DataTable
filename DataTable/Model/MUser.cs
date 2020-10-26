@@ -13,7 +13,12 @@ namespace DataTable.Model
         public string UserIP { get; set; }
         public string PostalCode { get; set; }
     }
-
+    public class DTable
+    {
+        public string Data { get; set; }
+        public string Name { get; set; }
+        public bool AutoWidth { get; set; }
+    }
     public class DataTablesRequest
     {
         public int Draw { get; set; }
