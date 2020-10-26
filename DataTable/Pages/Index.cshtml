@@ -10,23 +10,32 @@
 <table id="example" class="table table-condensed table-bordered table-striped">
     <thead>
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Gender</th>
-            <th>IP</th>
-            <th>PostalCode</th>
+            @foreach (Model.DTable col in Model.DTables)
+            {
+                <th>@col.Name</th>
+            }
         </tr>
     </thead>
 </table>
-
 @section scripts
 {
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css" integrity="sha512-1k7mWiTNoyx2XtmI96o+hdjP8nn0f3Z2N4oF/9ZZRgijyV4omsKOXEnqL1gKQNPy2MTSP9rIEWGcH/CInulptA==" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.bootstrap4.min.css" />
+    
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+    <script srt="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.colVis.min.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
-
+            var TableDt = @Html.Raw(Json.Serialize(Model.DTablesJson.Value));            
             $("#example").DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -44,13 +53,35 @@
                     },*@
                     "sortable": false
                 }],
-                "columns": [
-                    { "data": "firstName", "name": "First Name", "autoWidth": true },
-                    { "data": "lastName", "name": "Last Name", "autoWidth": true },
-                    { "data": "email", "name": "Email", "autoWidth": true },
-                    { "data": "gender", "name": "Gender", "autoWidth": true },
-                    { "data": "userIP", "name": "IP", "autoWidth": true },
-                    { "data": "postalCode", "name": "PostalCode", "autoWidth": true },
+                "columns": TableDt["dTables"],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: [0, ':visible']
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        text: 'Show/Hide Columns',
+                        @*className: 'btn btn-info',
+                        columnText: function (dt, idx, title) {
+                            return (idx + 1) + ': ' + title;
+                        }*@
+                    },
                 ],
                 "order": [[0, "desc"]]
             });

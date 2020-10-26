@@ -24,11 +24,23 @@ namespace DataTable.Pages
         }
         [BindProperty]
         public List<MUser> user { get; set; }
+        public JsonResult DTablesJson { get; set; }
+        public List<DTable> DTables { get; set; }
+
         [BindProperty]
         public DataTablesRequest DataTablesRequest { get; set; }
         public void OnGet()
         {
-           
+            DTables = new List<DTable>() {
+                new DTable { Data = "firstName", Name = "First Name", AutoWidth = true },
+                new DTable { Data = "lastName", Name = "Last Name", AutoWidth = true },
+                new DTable { Data = "email", Name = "Email", AutoWidth = true },
+                new DTable { Data = "gender", Name = "Gender", AutoWidth = true },
+                new DTable { Data = "userIP", Name = "IP", AutoWidth = true },
+                new DTable { Data = "postalCode", Name = "Postal Code", AutoWidth = true },
+                //new DTable { Data = "", Name = "Action", AutoWidth = true }
+            };
+            DTablesJson = new JsonResult(new { DTables });
         }
         public JsonResult OnPost()
         {
